@@ -19,10 +19,10 @@ k = 4
 def zig_zag(word, k):
     n = len(word)
     matrix = [[" " for col in range(n)] for row in range(k)]
-    pprint.pprint(matrix)
     row = 0
     
     for col, letter in enumerate(word):
+        
         matrix[row][col] = letter
         
         # set direction
@@ -39,7 +39,8 @@ def zig_zag(word, k):
     for line in matrix:
         print("".join(line))
     
-            
+
+
     
     #return ans
 
