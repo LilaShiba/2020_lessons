@@ -31,7 +31,7 @@ class Trie:
                 root = root.setdefault(letter, {})
         root['#'] = '#'
         
-    
+    # returns letters that follow prefix
     def get(self,prefix):
         root = self.trie
         for letter in prefix:
@@ -70,9 +70,9 @@ def best_start(words):
             winners.append(letter)
     return winners
             
-print(best_start(['hello', 'hey', 'help', 'foxy']))        
-# trie = Trie(['hello', 'hey', 'help'])
+#print(best_start(['hello', 'hey', 'help', 'foxy']))        
+trie = Trie(['hello', 'hey', 'help'])
 # trie.show()
-# # print(trie.get('he'))
+print(trie.get('he'))
 # # print(trie.trie.keys())
 # trie.is_winning('he')
