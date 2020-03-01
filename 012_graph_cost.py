@@ -55,11 +55,11 @@ def bfs(graph, start, goal):
         queue.append(new_path)
 
 
-def prims(adj,start):
+def prims(adj,start, connectors):
     path = [start]
     total = 0
     connections = []
-    connectors = [v for v in adj]
+    connectors = [v+1 for v in range(connectors)]
     while len(path) < len(adj):
         next_vertex, prev_node, count = find_min(adj, path, total,connectors)
         total += count 
@@ -84,5 +84,5 @@ def find_min(adj, path, total,connectors):
         
 adj = make_adj(edges)
 print(adj)
-print(prims(adj, 0))
+print(prims(adj, 0,4))
 #print(bfs(adj,0,3))
