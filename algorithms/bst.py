@@ -1,3 +1,5 @@
+import random
+
 class Node:
     def __init__(self,v,r=None,l=None):
         self.v = v
@@ -38,10 +40,11 @@ class Node:
                 nodeStack.append(node.r)
             if node.l is not None:
                 nodeStack.append(node.l)  
-        print(arr) 
+        #print(arr) 
         return arr
                      
 arr = [1,3,2,5,7,8,5,6,0]
+arr2 = [random.randint(0,1000) for x in range(5)]
 
 def bst_sort(arr):
     root = Node(arr[0])
@@ -49,7 +52,7 @@ def bst_sort(arr):
         new_node = Node(arr[x])
         root.add(new_node)
     return root
-        
-tree = bst_sort(arr)
+
+tree = bst_sort(arr2)
 tree.print_tree()
-tree.pre_order()
+#tree.pre_order()
