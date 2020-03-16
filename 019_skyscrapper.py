@@ -36,19 +36,18 @@ def forward_pass(buildings):
     
     
     for x in range(len(buildings)-1):
-        if buildings[x] > buildings[x+1]:
+        if buildings[x] >= buildings[x+1]:
             height = buildings[x]
             view.append(buildings[x])
         elif height > buildings[x]:
-            view = [x for x in view if x >= height]
+            view = [x for x in view if x > height]
     view.append(buildings[-1])
     return view
     
 
 def sunset_views(buildings):
     views = []
-    highest = 0
-
+    
     for building in buildings:
         while views and views[-1] <= building:
             views.pop()
@@ -56,7 +55,17 @@ def sunset_views(buildings):
 
     return len(views)
 
+def views(buildings):
+    views = []
+    
+    for b in buildings:
+        while views and views[-1] <= b:
+            views.pop()
+        views.append(b)
+    return views
+
             
     
 #print(simple(buildings))
 print(forward_pass(buildings))
+print(views(buildings))

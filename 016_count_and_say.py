@@ -18,7 +18,7 @@ def sequence(n:int) -> int:
     if n == '1':
         return '1'
     ans = '11'
-    # loop bu counting down to base case of 11 aka 2
+    # loop by counting down to base case of 11 aka 2
     while n != 2:
         # count is 1 because it is the default start
         count = 1

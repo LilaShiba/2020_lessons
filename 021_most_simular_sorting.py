@@ -71,25 +71,7 @@ def find_most_common(arr, k):
             score = jaccard_index(sites[i], sites[j], visitors)
             pairs.append((score, sites[i], sites[j]))
     return pairs
-# def expo(arr, k):
-#     '''
-#     arr[0][0] = A 
-#     arr[0][1] = 1
-#     '''
-#     arr = sorted(arr, key= lambda x:x[0])
-#     ans = {l:0 for x,l in arr}
-#     max_ans = []
-#     current = arr[0][0]
-# 
-#     for x,y in arr:
-#         print(x)
-#         if x == current:
-#             ans[x] = 1
-#         else:
-#             max_ans =  [(x,y) for x,y in ans.items()]
-# 
-#     return max_ans
-# 
+
 print(find_most_common(arr,1))
             
             
