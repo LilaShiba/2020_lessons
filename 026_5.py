@@ -28,7 +28,7 @@ paths = {
 In this case, the shortest valid path would be 0 -> 2 -> 4 -> 0, with a distance of 28.
 
 '''
-import heapq
+import heapq, pprint
 elevations = {0: 5, 1: 25, 2: 15, 3: 20, 4: 10}
 paths = {
     (0, 1): 10,
@@ -39,6 +39,15 @@ paths = {
     (3, 4): 5,
     (3, 0): 17,
     (4, 0): 10
+}
+
+graph = {
+    0: [1, 2, 3],
+    1: [0, 5],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [3],
+    5: [1]
 }
 
 # returns adj_list
@@ -56,6 +65,7 @@ def make_adj_list(paths, evl):
     # mid = mid[len(mid)//2]
     print(adj_list)
     return adj_list, evl[0]
+
 def make_graph(paths):
     graph = {}
     for x,y in paths:
@@ -64,6 +74,7 @@ def make_graph(paths):
         else:
             graph[x].append(y)
     return graph
+
 def topo_sort(adj_list):
     visited, stack = [], []
     for vertex in adj_list:
@@ -78,18 +89,14 @@ def dfs(adj_list, vertex, visited, stack):
             dfs(adj_list, v, visited, stack)
     stack.append(vertex)
 
-def find_path(adj_list, start_height, start, end):
-    
-    queue = [start]
-    heapq.heapify(queue)
+def find_path(adj_list, height, queue):
     visited = {x:float('inf') for x in adj_list}
-    #visited[0] = 0
+    visited[0] = 0
     explored = []
-
-    
     path = []
+    
     while queue:
-        distance, height, node = heapq.heappop(queue)
+        node = queue.pop(0)
         for d,h,u in adj_list[node]:
             cost = distance + d
             if cost < visited[u] + d:
@@ -103,10 +110,7 @@ def find_path(adj_list, start_height, start, end):
                     
     return visited, path
         
-
-adj_list, start_height = make_adj_list(paths,elevations)
 graph = make_graph(paths)
 print(graph)
 topo = topo_sort(graph)
-print(topo)
-print(find_path(adj_list, start_height,(0,0,0), 4))
+print(find_path(graph,elevations,topo))
