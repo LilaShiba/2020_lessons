@@ -37,7 +37,6 @@ function bfs(maze, start, end){
     if (node.v == end){
       console.log('found')
       return 'Found', path
-      break
     }
 
     if (!node.searched){
@@ -52,6 +51,7 @@ function bfs(maze, start, end){
 
             let new_path = path.map(x => x)
             console.log('new path', new_path)
+            u.parent = ([node.x,node.y])
             new_path.push(u)
             queue.push(new_path)
 
