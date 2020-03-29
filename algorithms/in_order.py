@@ -1,31 +1,58 @@
 class Node:
-    def __init__(self,v):
+    def __init__(self, v):
         self.v = v
-        self.right = None
-        self.left = None
-        
-def in_order(node):
-    if not node:
-        return
-    in_order(node.left)
-    print(node.v)
-    in_order(node.right)
+        self.r = None
+        self.l = None
+        self.lvl = None
+        self.parent = None
 
 
-def inorder(node):
-    if node.left:
-        inorder(node.left)
-    print(node.v)
-    if node.right:
-        inorder(node.right)
-        
-        
-root = Node(10)
-root.left = Node(8)
-root.right = Node(9)
-root.left.left = Node(3)
-root.left.right = Node(5)
-root.right.left = Node(2)
+    def get_lvl(self) -> object:
+        self.lvl = 0
+        stack = [self]
+        prev_node = self.v
 
-in_order(root)
-inorder(root)
+        while stack:
+            node  = stack.pop(0)
+            current_lvl = node.lvl
+
+            if node.r:
+                node.r.parent = node.v
+                node.r.lvl = current_lvl + 1
+                stack.append(node.r)
+
+            if node.l:
+                node.l.parent = node.v
+                node.l.lvl = current_lvl + 1
+                stack.append(node.l)
+
+    # left, root, right
+    def inorder(self):
+        root = self
+        if root.l:
+            root.l.inorder()
+        print(root.v)
+        if root.r:
+            root.r.inorder()
+
+    # root,left,right
+    def pre_order(self):
+        stack = [self]
+        while stack:
+            node = stack.pop()
+            print(node.v)
+            if node.r != None:
+                stack.append(node.r)
+            if node.l != None:
+                stack.append(node.l)
+
+    # level print
+    def level_print(self) -> int:
+        stack = [self]
+        while stack:
+            node = stack.pop(0)
+            if node.l != None:
+                stack.append(node.l)
+            if node.r != None:
+                stack.append(node.r)
+            print(node.v)

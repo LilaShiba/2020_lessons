@@ -19,27 +19,43 @@ graph = {
 def find_cycle(graph):
     discover = {v:False for v in graph}
     found = [False]
-    
+
     for vertex in graph:
         if found[0]:
-            break 
+            break
         if not discover[vertex]:
             visit(graph, vertex, vertex, discover, found)
     return found[0]
-    
+
 
 def visit(graph, node, prev_node, discover, found):
     if found[0]:
-        return 
-    
+        return
+
     discover[node] = True
     for edge in graph[node]:
         if discover[edge] and edge != prev_node:
             found[0] = True
-            return 
+            return
         if discover[edge] == False:
             visit(graph, edge, node, discover, found)
-            
-            
 
-print(find_cycle(graph))    
+
+def bfs_cycle(graph):
+    seen = {v:False for v in graph}
+    start = list(graph.keys())[0]
+    queue = [start]
+
+    while queue:
+        node = queue.pop(0)
+        if not seen[node]:
+            seen[node] = True
+            for edge in graph[node]:
+                if seen[edge]:
+                    return True
+                queue.append(edge)
+    return False
+
+
+print(find_cycle(graph))
+print(bfs_cycle(graph))

@@ -1,5 +1,5 @@
 # This problem was asked by Pandora.
-# 
+#
 # Given an undirected graph, determine if it contains a cycle.
 
 graph = {
@@ -14,25 +14,29 @@ graph = {
 def cycles(graph):
     visited = {v:False for v in graph}
     found = [False]
-    cycle = []
-    
+    cycle_start = []
+
     for vertex in graph:
-        if visited[vertex] == False:
-            dfs(graph, visited, vertex, vertex, found,cycle)
-        # if found[0] == True:
-        #     break
-    return found[0], cycle
-    
-def dfs(graph, visited, u, v, found,cycle):
-    # if found[0] == True:
-    #     return
+        if not visited[vertex]:
+            dfs(graph, visited, vertex, vertex, found, cycle_start)
+        if found[0]:
+            return cycle_start
+    return cycle_start
+
+def dfs(graph, visited, u, v, found, cycle_start):
+    if found[0]:
+        return cycle_start
+
     visited[u] = True
-    
+
     for edge in graph[u]:
         if visited[edge] and u != v:
+            cycle_start.append(edge)
+            print(cycle_start)
             found[0] = True
-            cycle.append((u,v))
+            return
         if not visited[edge]:
-            dfs(graph,visited,edge,u,found,cycle)
-            
+            dfs(graph,visited,edge,u,found, cycle_start)
+
+
 print(cycles(graph))
