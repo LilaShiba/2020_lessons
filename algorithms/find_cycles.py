@@ -42,18 +42,23 @@ def visit(graph, node, prev_node, discover, found):
 
 
 def bfs_cycle(graph):
-    seen = {v:False for v in graph}
-    start = list(graph.keys())[0]
+    visited = {v:False for v in graph}
+    start = list(graph.keys())[-1]
     queue = [start]
+    parent = start
 
     while queue:
         node = queue.pop(0)
-        if not seen[node]:
-            seen[node] = True
-            for edge in graph[node]:
-                if seen[edge]:
-                    return True
-                queue.append(edge)
+
+        for edge in graph[node]:
+            if parent != edge:
+                if visited[edge]:
+                    print(edge)
+                    #return True
+                if not visited[edge]:
+                    queue.append(edge)
+        visited[node] = True
+        parent = node
     return False
 
 

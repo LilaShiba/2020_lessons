@@ -25,19 +25,23 @@ graph2 = {
 
 
 def find_cycles(graph):
-    stack = [list(graph.keys())[0]]
     visited = {v:False for v in graph}
+    start = list(graph.keys())[-1]
+    queue = [start]
+    parent = start
 
-    while stack:
-        node = stack.pop(0)
-        if not visited[node]:
-            visited[node] = True
-            for edge in graph[node]:
+    while queue:
+        node = queue.pop(0)
+
+        for edge in graph[node]:
+            if parent != edge:
                 if visited[edge]:
                     print(edge)
-                    return True
-                else:
-                    stack.append(edge)
+                    #return True
+                if not visited[edge]:
+                    queue.append(edge)
+        visited[node] = True
+        parent = node
     return False
 
 def find_bridges(graph):
