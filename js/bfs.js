@@ -50,7 +50,6 @@ function bfs(maze, start, end){
             u = maze[cx][cy]
 
             let new_path = path.map(x => x)
-            console.log('new path', new_path)
             u.parent = ([node.x,node.y])
             new_path.push(u)
             queue.push(new_path)
