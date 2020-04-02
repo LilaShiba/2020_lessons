@@ -1,48 +1,47 @@
-import heapq
-import time
-import random, pprint
+graph = {
+    0: [1, 2, 3],
+    1: [0, 5],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [3],
+    5: [1]
+}
 
+"""
+2 --- 0 --- 1 --- 5
+  \   |
+   \  |
+      3 --- 4
+"""
 
-def astar(maze, start, end):
-    hqueue = [start]
-    visited = {(0,0):0}
-    parent = {}
-    heapq.heapify(hqueue)
+def find_edges(graph):
+    reach = {v:-1 for v in graph}
+    low = {v:-1 for v in graph}
+    visited = {v:False for v in graph}
+    depth = 0
+    edges = []
 
-    while hqueue:
-        distance, cost, x, y = heapq.heappop(hqueue)
-        neighbors = get_neighbors(maze,x,y)
+    for vertex in graph:
+        if not visited[vertex]:
+            dfs(graph, vertex, vertex, reach, low, visited, depth, edges)
+        return edges
 
-        for cx, cy in neighbors:
-            if ((cx,cy) not in visited) or( cost + maze[cx][cy] < visited[(cx,cy)]):
-                visited[(cx,cy)] = cost
-                new_distance = abs(end[0]-cx) - abs(end[1]-cy)
-                heapq.heappush(hqueue, (new_distance, cost+maze[cx][cy], cx, cy))
-                parent[(cx,cy)] = (x,y)
+def dfs(graph, u, v, reach, low, visited, depth, edges):
+    reach[v] = depth
+    low[v] = depth
+    visited[v] = True
 
-                if (cx,cy) == end:
-                    print('Found')
-                    return (visited[end], parent)
+    for edge in graph[v]:
+        if edge != u:
+            if visited[edge]:
+                low[v] = min(low[v], reach[edge])
+            else:
+                dfs(graph, v, edge, reach, low, visited, depth+1, edges)
+                low[v] = min(low[v], low[edge])
+                if low[edge] > reach[v]:
+                    edges.append(edge)
 
-
-def get_neighbors(maze, x, y):
-    neighbors = ((x+1, y), (x-1,y), (x, y-1), (x, y+1), (x+1, y-1), (x-1, y-1), (x+1,y+1), (x-1,y+1))
-    real_neighbors = ((x,y) for x,y in neighbors if 0<= x < len(maze) and 0<= y < len(maze[0]))
-    return real_neighbors
-
-
-if __name__ == "__main__":
-    matrix = [[random.randint(0,10) for x in range(20)]for y in range(20)]
-    start_time = time.time()
-
-    length = len(matrix)-1
-    total, parent = astar(matrix, (0,0,0,0), (length,length))
-    print("Ran in %s seconds ---" % (time.time() - start_time))
-    print('cost is', total)
-    currentNode = (length,length)
-    while currentNode != (0,0):
-        x,y = currentNode
-        matrix[x][y] = "X"
-        currentNode = parent[(x,y)]
-    matrix[0][0] = 'X'
-    pprint.pprint(matrix)
+edges = find_edges(graph)
+print("Edges:",edges)
+cycle = graph.keys() - edges
+print("Cycles:",cycle)

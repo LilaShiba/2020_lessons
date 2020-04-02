@@ -51,10 +51,16 @@ def dfs(graph, u, v, visited, low, reach, edges, depth):
     for edge in graph[v]:
         if edge != u:
             if visited[edge]:
+                # is reach of edge lower than parent low?
                 low[v] = min(low[v], reach[edge])
             else:
+                # keep searching
                 dfs(graph, v, edge, visited, low, reach, edges, depth+1)
+                # when you can't search any more
+                # change parent low to be the lowest
                 low[v] = min(low[v], low[edge])
+                # if parent reach is less than child low
+                # that edge isn't connected to another path
                 if low[edge] > reach[v]:
                     edges.append(edge)
 
@@ -63,11 +69,6 @@ def find_all_in_cycle(graph):
     edges = find_bridges(graph)
     print('Edges:', edges)
     cycles = graph.keys() - edges
-    true_cycles = []
-    for x in cycles:
-        if len(graph[x]) > 0:
-            true_cycles.append(x)
-
-    return true_cycles
+    return cycles
 
 print('Cycles:', find_all_in_cycle(graph))
