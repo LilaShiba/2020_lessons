@@ -71,7 +71,6 @@ def move(seats):
     # seats[current_seat] = 'c'
 
     left_people = people[:n//2]
-    print(left_people)
     # need to swap?
     mark = False
     need_to_loop = False
@@ -94,6 +93,34 @@ def move(seats):
                 #seats[people[current_person]] = '0'
 
             current_seat -= 1
+
+
+
+    # seats[current_seat] = 'c'
+    current_person = n//2 +1
+    right_people = people[current_person+1:]
+    # need to swap?
+    mark = False
+    need_to_loop = False
+    for x in range(median+1, -1, -1):
+        if seats[x] == 1:
+            mark = True
+        if seats[x] == 0 and mark:
+            need_to_loop = True
+            break
+    # if need to swap, move to right
+    if need_to_loop:
+        while len(right_people) > 0:
+            if seats[current_seat] == 0:
+                current_person = right_people.pop(0)
+                while current_person < current_seat and right_people:
+                    current_person = right_people.pop(0)
+                print(current_person)
+
+                seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
+                #seats[people[current_person]] = '0'
+
+            current_seat += 1
 
 
 

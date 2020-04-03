@@ -20,7 +20,26 @@ arr =  [0, 1, 1, 0, 1, 0, 0, 0, 1]
 ans = 5
 import random
 seats = [random.randint(0,1) for x in range(10)]
-print(seats)
+
+
+def need_to_swap(arr, start, rev=False):
+    mark = False
+
+    if not rev:
+        for x in arr:
+            if x == 1:
+                mark = True
+            if mark and x == 0:
+                return True
+        return False
+
+    for x in range(start,-1,-1):
+        if arr[x] == 1:
+            mark == True
+        if arr[x] == 0 and mark:
+            return True
+    return False
+
 
 def move_people(seats):
     '''
@@ -36,28 +55,31 @@ def move_people(seats):
     # find median of seats taken
     median = people[n//2]
     cost = 0
+    seats[median] = 'x'
+    print(seats)
 
     # a weird merge sort
     # i is the median
     # j is middle of seats taken - 1; hence left side
-    i = median-1; j = n //2 - 1
+    if need_to_swap(seats[:median], 0):
+        i = median-1; j = n //2 - 1
 
-    while i >= 0 and j >= 0:
-        if seats[i] == 0:
-            # calculate distance
-            cost += abs(people[j]-i)
-            # swap empty for person
-            seats[i], seats[people[j]] = seats[people[j]], seats[i]
-            # continue journey
-            j -= 1
-        i -= 1
-
-    i = median+1; j = n//2 +1
-    while i < len(seats) and j < n:
-        if seats[i] == 0:
-            cost += abs(people[j] - i)
-            seats[i], seats[people[j]] = seats[people[j]], seats[i]
-            j += 1
-        i += 1
+        while i >= 0 and j >= 0:
+            if seats[i] == 0:
+                # calculate distance
+                cost += abs(people[j]-i)
+                # swap empty for person
+                seats[i], seats[people[j]] = seats[people[j]], seats[i]
+                # continue journey
+                j -= 1
+            i -= 1
+    if need_to_swap(seats[median+1:], 0, True):
+        i = median+1; j = n//2 +1
+        while i < len(seats) and j < n:
+            if seats[i] == 0:
+                cost += abs(people[j] - i)
+                seats[i], seats[people[j]] = seats[people[j]], seats[i]
+                j += 1
+            i += 1
     return seats, cost
 print(move_people(seats))
