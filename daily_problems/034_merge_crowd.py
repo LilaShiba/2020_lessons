@@ -15,71 +15,78 @@ Given an input such as the one above, return the lowest possible cost of moving
 people to remove all gaps.
 
 '''
-
-arr =  [0, 1, 1, 0, 1, 0, 0, 0, 1]
-ans = 5
 import random
-seats = [random.randint(0,1) for x in range(10)]
+s = [random.randint(0,1) for x in range(10)]
+# print(s)
+#s1 = [0,1,1,0,1,0,0,1,0]
+#s2 = [1, 1, 0, 1, 0, 1, 1, 0, 1, 0]
+#s = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1]
 
-
-def need_to_swap(arr, start, rev=False):
+def should_swap(seats, median, rev=False):
     mark = False
 
-    if not rev:
-        for x in arr:
-            if x == 1:
+    if rev:
+        for x in seats[median+1:]:
+            if x == 0:
                 mark = True
-            if mark and x == 0:
+            if x == 1 and mark:
                 return True
         return False
 
-    for x in range(start,-1,-1):
-        if arr[x] == 1:
-            mark == True
-        if arr[x] == 0 and mark:
+
+    for x in seats[:median]:
+        if x == 1:
+            mark = True
+        if x == 0 and mark:
             return True
     return False
 
 
-def move_people(seats):
-    '''
-    goal: redistribute people such that there are no gaps
-    between any of them
-
-    cost = the sum of the absolute distance each person
-    must move
-    '''
+def move(seats):
     # calculate indices of taken seats
     people = [i for i, x in enumerate(seats) if x == 1]
     n = len(people)
     # find median of seats taken
     median = people[n//2]
     cost = 0
-    seats[median] = 'x'
+    seats[median] = "x"
     print(seats)
 
-    # a weird merge sort
-    # i is the median
-    # j is middle of seats taken - 1; hence left side
-    if need_to_swap(seats[:median], 0):
-        i = median-1; j = n //2 - 1
+    current_seat = median
+    current_person = n//2 -1
+    left_people = people[:n//2]
+    # need to swap?
+    need_to_loop = should_swap(seats, median)
+    # if need to swap, move to right
+    if need_to_loop:
+        while len(left_people) > 0 and current_seat >=0:
+            if seats[current_seat] == 0:
+                current_person = left_people.pop(-1)
+                while current_person >= current_seat and left_people:
+                    current_person = left_people.pop(-1)
+                seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
+            current_seat -= 1
 
-        while i >= 0 and j >= 0:
-            if seats[i] == 0:
-                # calculate distance
-                cost += abs(people[j]-i)
-                # swap empty for person
-                seats[i], seats[people[j]] = seats[people[j]], seats[i]
-                # continue journey
-                j -= 1
-            i -= 1
-    if need_to_swap(seats[median+1:], 0, True):
-        i = median+1; j = n//2 +1
-        while i < len(seats) and j < n:
-            if seats[i] == 0:
-                cost += abs(people[j] - i)
-                seats[i], seats[people[j]] = seats[people[j]], seats[i]
-                j += 1
-            i += 1
-    return seats, cost
-print(move_people(seats))
+
+
+    # seats[current_seat] = 'c'
+
+    current_seat = median+1
+    current_person = n//2+1
+    right_people = people[current_person:]
+    # need to swap?
+    need_to_loop = should_swap(seats, median, True)
+    # if need to swap, move to right
+    if need_to_loop:
+        while len(right_people) > 0 and current_person < len(seats):
+            if seats[current_seat] == 0:
+                current_person = right_people.pop(0)
+                while current_seat >= current_person and right_people:
+                    current_person = right_people.pop(0)
+                seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
+                #seats[people[current_person]] = '0'
+
+            current_seat += 1
+    return seats
+
+print(move(s))
