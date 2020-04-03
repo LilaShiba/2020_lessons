@@ -18,6 +18,9 @@ people to remove all gaps.
 
 arr =  [0, 1, 1, 0, 1, 0, 0, 0, 1]
 ans = 5
+import random
+seats = [random.randint(0,1) for x in range(10)]
+print(seats)
 
 def move_people(seats):
     '''
@@ -37,7 +40,7 @@ def move_people(seats):
     # a weird merge sort
     # i is the median
     # j is middle of seats taken - 1; hence left side
-    i = median; j = n //2 - 1
+    i = median-1; j = n //2 - 1
 
     while i >= 0 and j >= 0:
         if seats[i] == 0:
@@ -49,7 +52,7 @@ def move_people(seats):
             j -= 1
         i -= 1
 
-    i = median; j = n//2 +1
+    i = median+1; j = n//2 +1
     while i < len(seats) and j < n:
         if seats[i] == 0:
             cost += abs(people[j] - i)
@@ -57,4 +60,4 @@ def move_people(seats):
             j += 1
         i += 1
     return seats, cost
-print(move_people(arr))
+print(move_people(seats))

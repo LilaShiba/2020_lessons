@@ -7,12 +7,12 @@ def msort(arr):
         mid = n//2
         r = arr[mid:]
         l = arr[:mid]
-        
+
         msort(r)
         msort(l)
-        
+
         i=j=k = 0
-        
+
         while i < len(r) and j < len(l):
             if r[i] < l[j]:
                 arr[k] = r[i]
@@ -21,12 +21,12 @@ def msort(arr):
                 arr[k] = l[j]
                 j += 1
             k += 1
-            
+
         while i < len(r):
-            arr[k] = r[i] 
+            arr[k] = r[i]
             i += 1
             k += 1
-        
+
         while j < len(l):
             arr[k] = l[j]
             j += 1
