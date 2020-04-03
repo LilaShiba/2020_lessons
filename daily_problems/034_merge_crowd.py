@@ -17,10 +17,7 @@ people to remove all gaps.
 '''
 import random
 s = [random.randint(0,1) for x in range(10)]
-# print(s)
-#s1 = [0,1,1,0,1,0,0,1,0]
-#s2 = [1, 1, 0, 1, 0, 1, 1, 0, 1, 0]
-#s = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1]
+
 
 def should_swap(seats, median, rev=False):
     mark = False
@@ -62,14 +59,14 @@ def move(seats):
         while len(left_people) > 0 and current_seat >=0:
             if seats[current_seat] == 0:
                 current_person = left_people.pop(-1)
+                # ensure current person is not greater than where seat is, if not this will mess up the ordering
                 while current_person >= current_seat and left_people:
                     current_person = left_people.pop(-1)
+                cost += abs(current_seat - current_person)
                 seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
+
             current_seat -= 1
 
-
-
-    # seats[current_seat] = 'c'
 
     current_seat = median+1
     current_person = n//2+1
@@ -83,10 +80,11 @@ def move(seats):
                 current_person = right_people.pop(0)
                 while current_seat >= current_person and right_people:
                     current_person = right_people.pop(0)
+                cost += abs(current_seat - current_person)
                 seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
                 #seats[people[current_person]] = '0'
 
             current_seat += 1
-    return seats
+    return seats,cost
 
 print(move(s))
