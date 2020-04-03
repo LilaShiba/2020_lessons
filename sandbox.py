@@ -64,6 +64,7 @@ def move(seats):
     median = people[n//2]
     cost = 0
     seats[median] = "x"
+    print(seats)
 
     current_seat = median
     current_person = n//2 -1
@@ -82,41 +83,38 @@ def move(seats):
             break
     # if need to swap, move to right
     if need_to_loop:
-        while len(left_people) > 0:
+        while len(left_people) > 0 and current_seat >=0:
             if seats[current_seat] == 0:
                 current_person = left_people.pop(-1)
                 while current_person >= current_seat and left_people:
                     current_person = left_people.pop(-1)
-                print(current_person)
-
                 seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
-                #seats[people[current_person]] = '0'
 
             current_seat -= 1
 
 
 
     # seats[current_seat] = 'c'
-    current_person = n//2 +1
-    right_people = people[current_person+1:]
+
+    current_seat = median+1
+    current_person = n//2+1
+    right_people = people[current_person:]
     # need to swap?
     mark = False
     need_to_loop = False
-    for x in range(median+1, -1, -1):
-        if seats[x] == 1:
+    for x in seats[median+1:]:
+        if x == 0:
             mark = True
-        if seats[x] == 0 and mark:
+        if x == 1 and mark:
             need_to_loop = True
             break
     # if need to swap, move to right
     if need_to_loop:
-        while len(right_people) > 0:
+        while len(right_people) > 0 and current_person < len(seats):
             if seats[current_seat] == 0:
                 current_person = right_people.pop(0)
-                while current_person < current_seat and right_people:
+                while current_seat >= current_person and right_people:
                     current_person = right_people.pop(0)
-                print(current_person)
-
                 seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
                 #seats[people[current_person]] = '0'
 
