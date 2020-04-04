@@ -1,0 +1,14 @@
+body{
+  text-align: center;
+}
+
+#issMap {
+  height: 35em;
+  width:50%;
+  text-align: center;
+  margin-top: 5em;
+}
+
+.h1{
+  color: white;
+}
