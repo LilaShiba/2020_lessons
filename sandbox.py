@@ -1,134 +1,133 @@
-# # graph = {
-# #     0: [1, 2, 3],
-# #     1: [0, 5],
-# #     2: [0, 3],
-# #     3: [0, 2, 4],
-# #     4: [3],
-# #     5: [1]
-# # }
-# #
-# # """
-# # 2 --- 0 --- 1 --- 5
-# #   \   |
-# #    \  |
-# #       3 --- 4
-# # """
-# #
-# # def find_edges(graph):
-# #     reach = {v:-1 for v in graph}
-# #     low = {v:-1 for v in graph}
-# #     visited = {v:False for v in graph}
-# #     depth = 0
-# #     edges = []
-# #
-# #     for vertex in graph:
-# #         if not visited[vertex]:
-# #             dfs(graph, vertex, vertex, reach, low, visited, depth, edges)
-# #         return edges
-# #
-# # def dfs(graph, u, v, reach, low, visited, depth, edges):
-# #     reach[v] = depth
-# #     low[v] = depth
-# #     visited[v] = True
-# #
-# #     for edge in graph[v]:
-# #         if edge != u:
-# #             if visited[edge]:
-# #                 low[v] = min(low[v], reach[edge])
-# #             else:
-# #                 dfs(graph, v, edge, reach, low, visited, depth+1, edges)
-# #                 low[v] = min(low[v], low[edge])
-# #                 if low[edge] > reach[v]:
-# #                     edges.append(edge)
-# #
-# # edges = find_edges(graph)
-# # print("Edges:",edges)
-# # cycle = graph.keys() - edges
-# # print("Cycles:",cycle)
+
 #
+# def find_min_range(people, tower):
+#     min_range = -1
+#     towers = [-float('inf')] + sorted(tower) + [float('inf')]
+#     for person in people:
+#         idx = search(person, towers)
+#         left = person - towers[idx-1]
+#         right = towers[idx] - person
 #
-import random
-s = [random.randint(0,1) for x in range(10)]
-# print(s)
-#s1 = [0,1,1,0,1,0,0,1,0]
-#s2 = [1, 1, 0, 1, 0, 1, 1, 0, 1, 0]
-#s = [0, 1, 1, 0, 0, 1, 0, 1, 0, 1]
+#         min_range = max(min_range, min(left, right))
+#     return min_range
+#
+# def search(person, towers):
+#     lo,hi= 0, len(towers)-1
+#
+#     while lo <= hi:
+#         mid = (lo+hi)//2
+#
+#         if towers[mid] > person:
+#             hi = mid -1
+#         elif towers[mid] < person:
+#             lo = mid +1
+#         else:
+#             return mid
+#     return lo
+#
+# print(find_min_range(listeners, towers))
+
+
+graph = {
+    0: [1, 2, 3],
+    1: [0, 5],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [3],
+    5: [1]
+}
 
 
 
-def move(seats):
-    # calculate indices of taken seats
-    people = [i for i, x in enumerate(seats) if x == 1]
-    n = len(people)
-    # find median of seats taken
-    median = people[n//2]
-    cost = 0
-    seats[median] = "x"
-    print(seats)
-
-    current_seat = median
-    current_person = n//2 -1
-
-    # seats[current_seat] = 'c'
-
-    left_people = people[:n//2]
-    # need to swap?
-    mark = False
-    need_to_loop = False
-    for x in seats[:median]:
-        if x == 1:
-            mark = True
-        if x == 0 and mark:
-            need_to_loop = True
-            break
-    # if need to swap, move to right
-    if need_to_loop:
-        while len(left_people) > 0 and current_seat >=0:
-            if seats[current_seat] == 0:
-                current_person = left_people.pop(-1)
-                while current_person >= current_seat and left_people:
-                    current_person = left_people.pop(-1)
-                seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
-
-            current_seat -= 1
+"""
+2 --- 0 --- 1 --- 5
+  \   |
+   \  |
+      3 --- 4
+"""
 
 
+graph2 = {
+            's': {'a': 0, 'b': 1},
+            'a': {'s': 3, 'b': 4, 'c':8},
+            'b': {'s': 4, 'a': 2, 'd': 2},
+            'c': {'a': 2, 'd': 7, 't': 4},
+            'd': {'b': 1, 'c': 11, 't': 5},
+            't': {'c': 3, 'd': 5}
+            }
 
-    # seats[current_seat] = 'c'
+def bellman_ford(graph, start):
+    cost = {key:float('inf') for key in graph}
+    cost[start] = 0
 
-    current_seat = median+1
-    current_person = n//2+1
-    right_people = people[current_person:]
-    # need to swap?
-    mark = False
-    need_to_loop = False
-    for x in seats[median+1:]:
-        if x == 0:
-            mark = True
-        if x == 1 and mark:
-            need_to_loop = True
-            break
-    # if need to swap, move to right
-    if need_to_loop:
-        while len(right_people) > 0 and current_person < len(seats):
-            if seats[current_seat] == 0:
-                current_person = right_people.pop(0)
-                while current_seat >= current_person and right_people:
-                    current_person = right_people.pop(0)
-                seats[current_seat], seats[current_person] = seats[current_person], seats[current_seat]
-                #seats[people[current_person]] = '0'
+    for vertex in range(len(graph)-1):
+        for u in graph:
+            for v,w in graph[u].items():
+                if cost[u] != float('inf') and cost[u] + w < cost[v]:
+                    cost[v] = cost[u] + w
 
-            current_seat += 1
+    for u in graph:
+        for v,w in graph[u].items():
+            if cost[u] != float('inf') and cost[u] + w < cost[v]:
+                return 'Neg Cycle at '+u+" and "+v
+    return cost
 
+print(bellman_ford(graph2, 't'))
 
+import random, pprint
+matrix = [[random.randint(0,10) for x in range(5)] for y in range(5)]
+pprint.pprint(matrix)
 
+def get_neighbors(x,y,matrix,block):
+    row = len(matrix)
+    col = len(matrix[0])
+    n = ((x+1,y), (x-1,y), (x,y-1), (x, y+1), (x-1,y-1), (x+1, y+1), (x-1, y+1), (x+1, y-1))
+    neighbors = ((x,y) for x,y in n if 0<= x < row and 0 <= y < col and matrix[x][y] < block)
+    return neighbors
 
+def bfs(graph,start,end):
+    queue=[[start]]
+    visited = []
 
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+        if node == end:
+            return path
 
+        x,y = node
+        neighbors = get_neighbors(x,y,graph,100)
+        for cx,cy in neighbors:
+            if (cx,cy) not in visited:
+                visited.append((cx,cy))
+                new_list = list(path)
+                new_list.append((cx,cy))
+                queue.append(new_list)
+    return False
 
+print(bfs(matrix,(0,0), (4,4) ))
 
+def bfs_adj(graph,start,end):
+    visited = {v:False for v in graph}
+    queue = [start]
+    parent = {v:None for v in graph}
+    parent[start]= start
 
+    while queue:
+        node = queue.pop(0)
+        if node == end:
+            while end != start:
+                print(end)
+                end = parent[end]
+            print(end)
 
-    return seats
+            return parent
+        if not visited[node]:
+            visited[node] = True
+            for u in graph[node]:
+                if parent[node] != u:
+                    parent[u] = node
+                queue.append(u)
+    return False
 
-print(move(s))
+print(bfs_adj(graph, 3, 5))

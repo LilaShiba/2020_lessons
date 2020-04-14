@@ -23,6 +23,36 @@ d_graph = {
            5:[1]
 }
 
+def edges(graph):
+    visited = {v:False for v in graph}
+    reach = low = {v:float('inf') for v in graph}
+    depth = 0
+    edges = []
+
+    for v in graph:
+        if not visited[v]:
+            find_me(graph, v, v, visited, low, reach, edges, depth)
+    print("edges ", edges)
+    print("cycles ", graph.keys()-edges)
+    return edges
+
+def find_me(graph, u, v, visited, low, reach, edges, depth):
+    visited[v] = True
+    reach[v] = depth
+    low[v] = depth
+
+    for edge in graph[v]:
+        if u != edge:
+            if visited[edge]:
+                low[v] = min(low[v], reach[edge])
+            else:
+                find_me(graph, v, edge, visited, low, reach, edges, depth+1)
+                low[v] = min(low[v], low[edge])
+                if reach[v] < low[edge]:
+                    edges.append(edge)
+
+edges(graph)
+
 def find_cycle(graph):
     discover = {v:False for v in graph}
     found = [False]
