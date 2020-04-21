@@ -53,6 +53,6 @@ def bst_sort(arr):
         root.add(new_node)
     return root
 
-tree = bst_sort(arr2)
+tree = bst_sort(arr)
 tree.print_tree()
 #tree.pre_order()

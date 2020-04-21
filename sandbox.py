@@ -1,32 +1,4 @@
 
-#
-# def find_min_range(people, tower):
-#     min_range = -1
-#     towers = [-float('inf')] + sorted(tower) + [float('inf')]
-#     for person in people:
-#         idx = search(person, towers)
-#         left = person - towers[idx-1]
-#         right = towers[idx] - person
-#
-#         min_range = max(min_range, min(left, right))
-#     return min_range
-#
-# def search(person, towers):
-#     lo,hi= 0, len(towers)-1
-#
-#     while lo <= hi:
-#         mid = (lo+hi)//2
-#
-#         if towers[mid] > person:
-#             hi = mid -1
-#         elif towers[mid] < person:
-#             lo = mid +1
-#         else:
-#             return mid
-#     return lo
-#
-# print(find_min_range(listeners, towers))
-
 
 graph = {
     0: [1, 2, 3],
@@ -74,60 +46,68 @@ def bellman_ford(graph, start):
 
 print(bellman_ford(graph2, 't'))
 
-import random, pprint
-matrix = [[random.randint(0,10) for x in range(5)] for y in range(5)]
-pprint.pprint(matrix)
 
-def get_neighbors(x,y,matrix,block):
-    row = len(matrix)
-    col = len(matrix[0])
-    n = ((x+1,y), (x-1,y), (x,y-1), (x, y+1), (x-1,y-1), (x+1, y+1), (x-1, y+1), (x+1, y-1))
-    neighbors = ((x,y) for x,y in n if 0<= x < row and 0 <= y < col and matrix[x][y] < block)
-    return neighbors
+def bf(graph, start):
+    cost = {key:float('inf') for key in graph}
+    cost[start] = 0
 
-def bfs(graph,start,end):
-    queue=[[start]]
-    visited = []
+    for vertex in range(len(graph)-1):
+        for u in graph:
+            for v,w in graph[u].items():
+                if cost[u] != float('inf') and cost[u] + w < cost[v]:
+                    cost[v] = cost[u]+w
 
-    while queue:
-        path = queue.pop(0)
-        node = path[-1]
-        if node == end:
-            return path
+    for u in graph:
+        for v,w in graph[u].items():
+            if cost[u] != float('inf') and cost[u] + w < cost[v]:
+                return "Shit, neg cycle at ", u, "and ", v
 
-        x,y = node
-        neighbors = get_neighbors(x,y,graph,100)
-        for cx,cy in neighbors:
-            if (cx,cy) not in visited:
-                visited.append((cx,cy))
-                new_list = list(path)
-                new_list.append((cx,cy))
-                queue.append(new_list)
-    return False
+print(bf(graph2,'a'))
 
-print(bfs(matrix,(0,0), (4,4) ))
 
-def bfs_adj(graph,start,end):
+def get_edges(graph):
+    low = reach = {v:float('inf') for v in graph}
     visited = {v:False for v in graph}
-    queue = [start]
-    parent = {v:None for v in graph}
-    parent[start]= start
+    depth = 0
+    edges = []
 
-    while queue:
-        node = queue.pop(0)
-        if node == end:
-            while end != start:
-                print(end)
-                end = parent[end]
-            print(end)
+    for vertex in graph:
+        if not visited[vertex]:
+            dfs(graph,vertex,vertex,low,reach,visited,edges,depth)
+    return edges
 
-            return parent
-        if not visited[node]:
-            visited[node] = True
-            for u in graph[node]:
-                if parent[node] != u:
-                    parent[u] = node
-                queue.append(u)
+def dfs(graph, u, v, low, reach, visited, edges, depth):
+    low[v] = depth
+    reach[v] = depth
+    visited[v] = True
+
+    for edge in graph[v]:
+        if u != edge:
+            if visited[edge]:
+                low[v] = min(low[v], reach[edge])
+            else:
+                dfs(graph,v,edge,low,reach,visited,edges,depth+1)
+                low[v] = min(low[v], low[edge])
+                if reach[v] < low[edge]:
+                    edges.append(edge)
+
+print(get_edges(graph))
+
+def bsearch(arr, target):
+    lo, hi = 0, len(arr)-1
+
+    while lo <= hi:
+        mid = (lo+hi)//2
+        if target == arr[mid]:
+            return mid, arr[mid]
+        elif target > arr[mid]:
+            lo = mid + 1
+        else:
+            hi = mid - 1
     return False
 
-print(bfs_adj(graph, 3, 5))
+
+import random
+arr = [random.randint(0,100) for x in range(100)]
+arr = sorted(arr, key=lambda x:x)
+print(bsearch(arr, 12))
