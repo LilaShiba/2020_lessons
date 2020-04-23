@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- bootstap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css">
+    <!-- https://leafletjs.com/examples/quick-start/ -->
+    <title>Node Demo</title>
+  </head>
+  <body>
+    <div class='jumbotron container'>
+      <form class='my_form'>
+        <div class='form-group'>
+          <label for="start">start data: yyyy-mm-dd</label>
+          <input id="start" class="form-control" type="text">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your info with anyone else.</small>
+        </div>
+        <div>
+          <label for="stop">stop data: yyyy-mm-dd </label>
+          <input id="stop" class="form-control" type="text">
+        </div>
+        <br>
+        <center><button id = "find-nea" class='btn btn-primary btn-lg'>Are We Doomed?</button></center><br/>
+        <p></p>
+      </form>
+    </div>
+    <div class='container'>
+      <center><h1 id='myH1'></h1></center>
+      <div id='all_neos'></div>
+      <center><img src='' id='myImg'></center>
+    </div>
+    <script type="text/javascript" src="api_call.js"></script>
+  </body>
+</html>
