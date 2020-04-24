@@ -4,6 +4,7 @@ ans = 22
 import random
 arr2 = [random.randint(0,50) for x in range(50)]
 size = len(arr2)
+
 def bottom_up(price, size):
     table = [0 for x in range(size+1)]
 
