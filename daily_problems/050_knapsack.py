@@ -23,3 +23,5 @@ def knapsack(weights, values, limit):
 item_weights = [0, 2, 10, 3, 6, 18]
 item_values = [0, 1, 20, 3, 14, 100]
 print(knapsack(item_weights, item_values, 15))
+
+# only one of each item allowed
