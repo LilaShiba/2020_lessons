@@ -2,6 +2,25 @@ import random
 price = [random.randint(0,50) for x in range(10)]
 size = len(price)
 
+print('size', size)
+print('price', price)
+
+def rod(price,size):
+    table = [0 for x in range(size+1)]
+    print(table)
+    for current_cut in range(1, size+1):
+        max_value = 0
+        for current_value in range(current_cut):
+            this_cut =  price[current_value] + table[current_cut - current_value-1]
+            max_value = max(this_cut, max_value)
+        table[current_cut] = max_value
+        print(table)
+    return table
+
+
+print(rod(price, size))
+
+
 def top_rod(price, size, memo):
     # check memo
     if size in memo:

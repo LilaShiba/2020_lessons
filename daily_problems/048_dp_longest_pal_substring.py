@@ -11,3 +11,23 @@ def lp(s):
             if is_pal(substring) and len(substring) > len(longest):
                 longest = substring
     return longest, 'woof'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
