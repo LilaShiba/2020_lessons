@@ -2,23 +2,49 @@ import random
 price = [random.randint(0,50) for x in range(10)]
 size = len(price)
 
-print('size', size)
-print('price', price)
+
+def r_rod(price, size, memo):
+    if size in memo:
+        return memo[size]
+    
+    if size <= 0:
+        return 0
+    
+    max_cut = -float('inf')
+    for cut in range(0,size):
+        max_cut = max(max_cut, price[cut] + r_rod(price, size-cut-1, memo))
+    
+    memo[size] = max_cut
+    return max_cut
+
+def r_table(price,size):
+    table = [0 for x in range(size+1)]
+
+    for cut in range(1, size+1):
+        max_cut = 0 
+        for current_size in range(cut):
+            max_cut = max(max_cut, price[current_size] + table[cut-current_size-1])
+        table[cut] = max_cut
+    return table
+
+    
+print('r_table', r_table(price,size))
+print('r_rod', r_rod(price, size, {}))
+
+
 
 def rod(price,size):
     table = [0 for x in range(size+1)]
-    print(table)
     for current_cut in range(1, size+1):
         max_value = 0
         for current_value in range(current_cut):
             this_cut =  price[current_value] + table[current_cut - current_value-1]
             max_value = max(this_cut, max_value)
         table[current_cut] = max_value
-        print(table)
     return table
 
 
-print(rod(price, size))
+print('rod', rod(price, size))
 
 
 def top_rod(price, size, memo):
@@ -35,7 +61,7 @@ def top_rod(price, size, memo):
     memo[size] = max_value
     return max_value
 
-print(top_rod(price, size, {}))
+print('top rod', top_rod(price, size, {}))
 
 def bottom_up_rod(price, size):
     table = [0 for x in range(size + 1)]
@@ -45,8 +71,6 @@ def bottom_up_rod(price, size):
         for cut in range(all_cuts):
             max_value = max(max_value, price[cut] + table[all_cuts-cut-1])
         table[all_cuts] = max_value
-
-    print(table) 
     return table[-1]
 
-print(bottom_up_rod(price,size))
+print('bottom up', bottom_up_rod(price,size))

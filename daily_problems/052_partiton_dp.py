@@ -19,7 +19,7 @@ def navie_recursion(arr,n,current_sum):
         return False
     
     if arr[n-1] > current_sum:
-        return navie_recursion(arr,n-1,current_sum)
+        return navie_recursion(arr,n-1,current_sum-arr[n-1])
     
     return navie_recursion(arr,n-1,current_sum) or navie_recursion(arr,n-1, current_sum - arr[n-1])
 
