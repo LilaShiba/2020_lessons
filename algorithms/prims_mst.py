@@ -1,28 +1,73 @@
+'''
+Prim’s Algorithm Psuedocode
+1 Maintain priority queue Q on V \ S, where v.key = min{w(u, v) | u ∈ S}
+2 Q = V
+
+3 Choose arbitrary start vertex s ∈ V , s.key = ∅
+
+4 for v in V \ {s}
+5 v.key = ∞
+
+6 while Q is not empty
+
+7 u = Extract-Min(Q), add u to S
+
+8 for v ∈ Adj[u]
+
+9 if v ∈ Q and v /∈ S and w(u, v) < v.key:
+
+10 v.key = w(u, v) (via a Decrease-Key operation)
+
+11 v.parent = u
+
+12 return {{v, v.parent} | v ∈ V \ {s}}
+ 
+
+'''
+import random, heapq
 
 
+def prims_v(adj_list, start):
+    queue = [start]
+    s = []
+    heapq.heapify(queue)
 
-def prims(graph, start):
-    tree = [start]
-    connections = []
+    for vertex in adj_list:
+        while queue:
+            _ ,node = heapq.heappop(queue)
+            s.append(node)
+            best_edge_weight = float('inf')
+            best_edge = None
+            for edge in adj_list[node]:
+                if edge[0] not in s and edge[1] < best_edge_weight:
+                    best_edge_weight = edge[1]
+                    best_edge = edge[0]
+            if best_edge != None:
+                heapq.heappush(queue, (best_edge_weight, best_edge))
+        if vertex not in s:
+            queue.append((0,vertex))
+    return s 
 
-    while len(tree) < len(graph):
-        next_vertex, parent = find_min(graph, tree)
-        tree.append(next_vertex)
-        connections.append((next_vertex, parent))
-    return connections
 
-def find_min(graph, tree):
-    best = float('inf')
-    current = None
+def prims_v2(adj_list, start):
+    queue = [start]
+    s = []
+    heapq.heapify(queue)
 
-    for vertex in tree:
-        for edge in graph[vertex]:
-            if edge[0] not in tree and edge[1] < best:
-                best = edge[1]
-                current = edge[0]
-                parent = vertex
-    return current, parent
-
+    for vertex in adj_list:
+        while queue:
+            _, node = heapq.heappop(queue)
+            s.append(node)
+            best_weight = float('inf')
+            best_node = None
+            for edge in adj_list[node]:
+                if edge[0] not in s and edge[1] < best_weight:
+                    best_weight, best_node = edge[1], edge[0]
+            if best_node != None:
+                heapq.heappush(queue, (best_weight, best_node))
+        if vertex not in s:
+            queue.append((0,vertex))
+    return s
 
 
 
@@ -54,4 +99,5 @@ if __name__ == "__main__":
     'e':[('a',5), ('h',3)]
     }
 
-    print(prims(adj_list, 'a'))
+    print(prims_v(adj_list, (0,'a')))
+    print(prims_v2(adj_list,(0, 'a')))

@@ -1,19 +1,51 @@
-# def knapsack(weight, value, limit):
-#     table = [0] * (limit+1)
+import heapq
 
-#     for current_cut in range(1, limit+1):
-#         max_cut = 0
-#         for current_weight in range(1, len(weight)):
-#             # if current weight <= current weight limit
-#             if weight[current_weight] <= current_cut:
-#                 current_value = value[current_weight]
-#                 subproblem = current_value + table[current_cut - weight[current_weight]]
-#                 max_cut = max(max_cut, subproblem)
-#         table[current_cut] = max_cut
-#     return table
+def prims(adj_list, start):
+    queue = [start]
+    s = []
+    heapq.heapify(queue)
 
-# item_weights = [0, 2, 10, 3, 6, 18]
-# item_values = [0, 1, 20, 3, 14, 100]
+    for vertex in adj_list:
+        while queue:
+            # weight, u
+            _, node = heapq.heappop(queue)
+            s.append(node)
+            best_node = None 
+            best_node_weight = float('inf')
+            for edge in adj_list[node]:
+                if edge[0] not in s and edge[1] < best_node_weight:
+                    best_node = edge[0]
+                    best_node_weight = edge[1]
+            if best_node != None:
+                heapq.heappush(queue, (best_node_weight, best_node))
+        if vertex not in s:
+            heapq.heappush(queue, (0, vertex))
+    return s
+
+
+        
+            
+
+
+adj_list = { 
+    'a':[('b', 8), ('c', 6), ('d', 5)],
+    'b':[('a', 8), ('d', 4)],
+    'c':[('a',6), ('d', 3)],
+    'd':[('a',5), ('b',4), ('c',3)]
+    }
+
+adj_list2 = {
+    'a':[('b',8), ('f',1), ('h', 6), ('e',5)],
+    'b':[('a',8), ('c',4), ('f',2)],
+    'c':[('b',4), ('f',2), ('g',7)],
+    'g':[('c',7), ('f',9)],
+    'f':[('g',9), ('c',2), ('b', 6), ('a',1), ('h',5)],
+    'h':[('f',5), ('a',6), ('e',3)],
+    'e':[('a',5), ('h',3)]
+    }
+
+print(prims(adj_list, (0,'a')))
+
 
 graph = {
     0: [1, 2, 3],
@@ -31,20 +63,21 @@ graph = {
       3 --- 4
 """
 
+
 def find_edges(graph):
-    low = reach = {v:float('inf') for v in graph}
-    visited = {v:False for v in graph}
+    reach = low = {v:float('inf') for v in graph}
+    visited = {v: False for v in graph}
     depth = 0
     edges = []
 
-    for v in graph:
-        if not visited[v]:
-            dfs(graph,v,v,low,reach,visited,edges,depth)
-    return edges 
+    for vertex in graph:
+        if not visited[vertex]:
+            dfs(graph, vertex, vertex, reach, low, visited, edges, depth)
+    return edges
 
-def dfs(graph, u, v, low, reach, visited, edges, depth):
-    low[v] = depth 
+def dfs(graph,u,v,reach,low,visited,edges,depth):
     reach[v] = depth 
+    low[v] = depth
     visited[v] = True 
 
     for edge in graph[v]:
@@ -52,44 +85,9 @@ def dfs(graph, u, v, low, reach, visited, edges, depth):
             if visited[edge]:
                 low[v] = min(low[v], reach[edge])
             else:
-                dfs(graph, v, edge, low, reach, visited, edges, depth+1)
+                dfs(graph, v, edge, reach, low, visited, edges, depth+1)
                 low[v] = min(low[v], low[edge])
-                if reach[v] < low[edge]:
+                if low[edge] > reach[v]:
                     edges.append(edge)
 
 print(find_edges(graph))
-
-
-
-# def get_edges(graph):
-#     edges = []
-#     depth = 0 
-#     reach = low = {x:float('inf') for x in graph}
-#     visited = {x:False for x in graph}
-
-#     for vertex in graph:
-#         if not visited[vertex]:
-#             dfs_me(graph, vertex,vertex,reach,low,visited,edges,depth)
-#     return edges
-
-# def dfs_me(graph, u,v, reach, low, visited, edges, depth):
-#     reach[v] = depth 
-#     low[v] = depth 
-#     visited[v] = True 
-
-#     for edge in graph[v]:
-#         if u != edge:
-#             if visited[edge]:
-#                 low[v] = min(low[v], reach[edge])
-#             else:
-#                 dfs_me(graph,v,edge,reach,low,visited,edges,depth+1)
-#                 low[v] = min(low[v], low[edge])
-#                 if reach[v] < low[edge]:
-#                     edges.append(edge)
-
-
-# arr = [1, 5, 8, 9, 10, 17, 17, 20]
-# size = len(arr)
-# ans = 22
-# arr = [61, 90, 85, 19, 20, 96, 75, 20, 28, 13, 93, 88, 8, 35, 59]
-# ans = True
