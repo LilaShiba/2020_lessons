@@ -17,3 +17,6 @@ For example, suppose your input was the following tree:
 
 '''
 
+def even_tree(root):
+   pass
+
