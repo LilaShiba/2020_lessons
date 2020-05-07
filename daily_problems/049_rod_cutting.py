@@ -74,3 +74,16 @@ def bottom_up_rod(price, size):
     return table[-1]
 
 print('bottom up', bottom_up_rod(price,size))
+
+
+def roddy(arr,target):
+    table = [0 for x in range(target+1)]
+
+    for cut in range(1, target+1):
+        max_value = -float('inf')
+        for limit in range(cut):
+            max_value = max(max_value, arr[limit] + table[cut-limit-1])
+        table[cut] = max_value
+    return table
+
+print(roddy(price, size))

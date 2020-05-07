@@ -18,7 +18,7 @@ def bounces(runway, planeSpeed, planePos=0):
             return True
     return False
 
-print(bounces([0,0,1,0,0,0,0,0,0,0,0], 3))
+print(bounces([0,0,1,0,0,0,0,0,0,0,0], 3,))
 
 # memoization
 
@@ -47,3 +47,30 @@ def memoBounce(runway, planeSpeed, memo, planePos):
     return False 
 
 print(memoBounce([0,0,1,0,0,0,0,0,0,0,0], 3, {}, 0))
+
+
+def r_bounce(runway, planeSpeed, planePos, memo):
+    # check memo
+    if planePos in memo and planeSpeed in memo[planePos]:
+        return memo[planePos][planeSpeed] != None
+
+    # add to memo
+    if planePos not in memo:
+        memo[planePos] = {}
+    
+    # base case
+    if planeSpeed == 0:
+        return True 
+    # fail case
+    if planePos >= len(runway) or runway[planePos] == 1:
+        return False
+
+    # recursion 
+    for x in (planeSpeed-1), (planeSpeed+1), (planeSpeed):
+        if r_bounce(runway, x, planePos+x, memo):
+            memo[planePos][planeSpeed] = x
+            return True 
+    return False
+
+        
+print(r_bounce([0,0,1,0,0,0,0,0,0,0,0], 3, 0, {}))

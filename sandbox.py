@@ -44,7 +44,7 @@ adj_list2 = {
     'e':[('a',5), ('h',3)]
     }
 
-print(prims(adj_list, (0,'a')))
+# print(prims(adj_list, (0,'a')))
 
 
 graph = {
@@ -64,20 +64,19 @@ graph = {
 """
 
 
-def find_edges(graph):
+def get_edges(graph):
     reach = low = {v:float('inf') for v in graph}
-    visited = {v: False for v in graph}
+    visited = {v:False for v in graph}
     depth = 0
     edges = []
 
-    for vertex in graph:
-        if not visited[vertex]:
-            dfs(graph, vertex, vertex, reach, low, visited, edges, depth)
-    return edges
+    for v in graph:
+        if not visited[v]:
+            dfs(graph, v, v, reach, low, visited, depth, edges)
+    return edges 
 
-def dfs(graph,u,v,reach,low,visited,edges,depth):
-    reach[v] = depth 
-    low[v] = depth
+def dfs(graph,u,v, reach, low, visited, depth, edges):
+    low[v] = reach[v] = depth 
     visited[v] = True 
 
     for edge in graph[v]:
@@ -85,9 +84,62 @@ def dfs(graph,u,v,reach,low,visited,edges,depth):
             if visited[edge]:
                 low[v] = min(low[v], reach[edge])
             else:
-                dfs(graph, v, edge, reach, low, visited, edges, depth+1)
+                dfs(graph,v,edge,reach,low,visited,depth+1, edges)
                 low[v] = min(low[v], low[edge])
-                if low[edge] > reach[v]:
+                if reach[v] < low[edge]:
                     edges.append(edge)
 
-print(find_edges(graph))
+#print(get_edges(graph))
+
+
+
+
+
+
+def bounce(runway, planeSpeed, planePos):
+    # base case
+    if planePos < 0 or planePos >= len(runway) or runway[planePos] == 1:
+        return False 
+
+    if planeSpeed == 0:
+        print(planePos)
+        return True
+    
+    for adjusted_speed in (planeSpeed+1, planeSpeed-1, planeSpeed):
+        if bounce(runway, adjusted_speed, planePos+adjusted_speed):
+            return True 
+    return False
+  
+# print(bounce([0,0,1,0,0,0,0,0,0,0,0], 5, 0))
+
+import random
+price = [random.randint(0,50) for x in range(10)]
+size = len(price)
+
+def rod(price, size, memo):
+    if size in memo:
+        return memo[size]
+
+    if size <= 0:
+        return 0
+    
+    max_cut = 0
+    for cut in range(size):
+        max_cut = max(max_cut, price[cut] + rod(price, size-cut-1,memo))
+    memo[size] = max_cut
+    return max_cut
+
+
+print(rod(price, size, {}))
+
+def rood(price, size):
+    table = [0 for _ in range(size+1)]
+
+    for cut in range(1, size+1):
+        max_cut = 0
+        for current_cut in range(cut):
+            max_cut = max(max_cut, price[current_cut] + table[cut-current_cut-1])
+        table[cut] = max_cut
+    return table[-1]
+
+print(rood(price, size))
