@@ -1,173 +1,174 @@
-import heapq
+# https://www.youtube.com/watch?v=3N47yKRDed0
+def partition(arr, lenArr):
+    current_sum = sum(arr)
+    if current_sum % 2 == 0:
+        return recursion(arr, lenArr, current_sum//2 )
+    return False 
+    
 
-def prims(adj_list, start):
-    queue = [start]
-    s = []
-    heapq.heapify(queue)
+def recursion(arr, length, current_sum):
+    if current_sum == 0:
+        return True 
+    if length == 0 and current_sum != 0:
+        return False 
+    if arr[length-1] > current_sum:
+        return recursion(arr, length-1, current_sum)
+    
+    return recursion(arr, length-1, current_sum) or recursion(arr, length-1, current_sum-arr[length-1])
 
-    for vertex in adj_list:
-        while queue:
-            # weight, u
-            _, node = heapq.heappop(queue)
-            s.append(node)
-            best_node = None 
-            best_node_weight = float('inf')
-            for edge in adj_list[node]:
-                if edge[0] not in s and edge[1] < best_node_weight:
-                    best_node = edge[0]
-                    best_node_weight = edge[1]
-            if best_node != None:
-                heapq.heappush(queue, (best_node_weight, best_node))
-        if vertex not in s:
-            heapq.heappush(queue, (0, vertex))
-    return s
 
-def get_edges(graph):
-    reach = low = {v:float('inf') for v in graph}
-    visited = {v:False for v in graph}
-    depth = 0
+def nice_recursion(arr):
+    total = sum(arr)
+    if total % 2 != 0:
+        return False
+    
+    return canPartition(arr, 0, 0, total, {})
+
+def canPartition(arr, idx, cur_sum ,total, memo):
+    # memoization
+    if (idx, cur_sum) in memo:
+        return memo[(idx,cur_sum)]
+    # base case
+    if cur_sum * 2 == total:
+        return True
+    # False base case
+    if cur_sum > total//2 or idx >= len(arr):
+        return False
+    
+    memo[(idx,cur_sum)] = canPartition(arr, idx+1, cur_sum+ arr[idx], total, memo) or  canPartition(arr, idx+1, cur_sum, total, memo)
+    return memo[(idx,cur_sum)]
+
+
+
+
+
+def rr(arr):
+    total = sum(arr)
+
+    if total % 2 == 0:
+        return can_pp(arr, 0, 0, total, {})
+    return False 
+
+def can_pp(arr, idx, cur_sum, total, memo):
+    if (idx, cur_sum) in memo:
+        return memo[(idx,cur_sum)]
+    # True base case
+    if cur_sum * 2 == total:
+        return True 
+    # False base case
+    if idx >= len(arr) or cur_sum > total//2:
+        return False 
+    
+    memo[(idx, cur_sum)] =  can_pp(arr, idx+1, cur_sum + arr[idx], total, memo) or can_pp(arr, idx+1, cur_sum, total, memo)
+    return memo[(idx, cur_sum)]
+
+import random
+arr = [random.randint(0,100) for x in range(15)]
+print(arr)
+print(partition(arr, len(arr)))
+print(nice_recursion(arr))
+print(rr(arr))
+
+coins = [1,2,5]
+target = 11
+
+def smallest_coins(coins, target):
+    # hold all sub-problems
+    table = [target+1 for _ in range(target+1)]
+    # 0 coins = 0 change
+    table[0] = 0
+
+    # solve all subproblems bottom-up
+    for subproblem in range(target+1):
+        # simulate picking up all coins
+        for coin in range(len(coins)):
+            cc = coins[coin]
+            if cc <= subproblem:
+                table[subproblem] = min(table[subproblem], 1 + table[subproblem-cc])
+    return table
+
+def bfs_coin(coins, target):
+    queue = [0]
+    next_queue = []
+    current_coin_count = 0
+    vistited = [False for _ in range(target+1)]
+    vistited[0] = True
+
+    while queue:
+        current_coin_count += 1
+        for edge in queue:
+            for coin in coins:
+                next_coin = edge + coin  
+                if next_coin == target:
+                    return current_coin_count
+                if next_coin > target:
+                    continue
+                if not vistited[next_coin]:
+                    vistited[next_coin] = True 
+                    next_queue.append(next_coin)
+        queue, next_queue = next_queue, []
+    return False
+
+print(smallest_coins(coins, target))
+print(bfs_coin(coins, target))
+
+graph = {
+        0: [1, 2, 3],
+        1: [0, 5],
+        2: [0, 3],
+        3: [0, 2, 4],
+        4: [3],
+        5: [1]
+    }
+"""
+  2 --- 0 --- 1 --- 5
+   \   |
+    \  |
+      3 --- 4
+"""
+
+
+def find_edges(graph):
+    visited = {x:False for x in graph}
+    reach = low = {x:float('inf') for x in graph}
     edges = []
+    depth = 0
 
-    for v in graph:
-        if not visited[v]:
-            dfs(graph,v,v,reach,low,visited,depth,edges)
+    for vertex in graph:
+        if not visited[vertex]:
+            dfs(graph, vertex, vertex, visited, reach, low, edges, depth)
     return edges 
 
-def dfs(graph,u,v,reach,low,visited,depth,edges):
+
+def dfs(graph, u, v, visited, reach, low, edges, depth):
+    visited[v] = True 
     reach[v] = depth 
     low[v] = depth 
-    visited[v] = True 
 
     for edge in graph[v]:
         if u != edge:
             if visited[edge]:
                 low[v] = min(low[v], reach[edge])
             else:
-                dfs(graph,v,edge,reach,low,visited,depth+1,edges)
+                dfs(graph,v,edge,visited,reach,low,edges,depth+1)
                 low[v] = min(low[v], low[edge])
-                if reach[v] < low[edge]:
+                if low[edge] > reach[v]:
                     edges.append(edge)
+    return edges
+print(find_edges(graph))
 
-def bounce(runway, planeSpeed, planePos):
-    # base case
-    if planePos < 0 or planePos >= len(runway) or runway[planePos] == 1:
-        return False 
-
-    if planeSpeed == 0:
-        print(planePos)
-        return True
-    
-    for adjusted_speed in (planeSpeed+1, planeSpeed-1, planeSpeed):
-        if bounce(runway, adjusted_speed, planePos+adjusted_speed):
-            return True 
-    return False
-  
-def rod(price, size, memo):
+def rod_cut(price,size, memo):
     if size in memo:
         return memo[size]
-    
     if size <= 0:
         return 0
-    
-    max_cut = 0
+
+    max_cut = -float('inf')
     for cut in range(size):
-        max_cut = max(max_cut, price[cut] + rod(price, size-cut-1, memo))
+        max_cut = max(max_cut, price[cut] + rod_cut(price, size-cut-1, memo))
     memo[size] = max_cut
     return max_cut
-    
-def knapsack(items,price, limit):
-    table = [[0 for _ in range(limit+1)]for y in range(len(items))]
+price = [random.randint(0,50) for x in range(10)]
+size = len(price)
 
-    for i in range(1, len(items)):
-        for w in range(1, limit+1):
-            iw = items[i]
-            iv = price[i]
-
-            if iw <= w:
-                table[i][w] = max(table[i-1][w-iw] + iv, table[i-1][w])
-            else:
-                table[i][w] = table[i-1][w]
-    return table[-1][-1]
-
-def knappysack(items, values, limit):
-    table = [[0 for _ in range(limit+1)] for _ in range(len(items))]
-
-    for i in range(1, len(items)):
-        for w in range(1, limit+1):
-            cv = values[i]
-            cw = items[i]
-            if cw <= w:
-                table[i][w] = max(table[i-1][w-cw] + cv, table[i-1][w])
-            else:
-                table[i][w] = table[i-1][w]
-    return table[-1][-1]
-
-def prims(adj_list, start):
-    queue = [start]
-    heapq.heapify(queue)
-    s = []
-
-    for vertex in adj_list:
-        while queue:
-            _ ,node = heapq.heappop(queue)
-            s.append(node)
-            best_node_weight = float('inf')
-            best_node = None
-
-            for edge in adj_list[node]:
-                if edge[0] not in s and edge[1] < best_node_weight:
-                    best_node, best_node_weight = edge[0], edge[1]
-            if best_node != None:
-                heapq.heappush(queue, (best_node_weight, best_node))
-
-        if vertex not in s:
-            queue.append((0,vertex))
-    return s
-
-if __name__ == "__main__":
-    adj_list = { 
-    'a':[('b', 8), ('c', 6), ('d', 5)],
-    'b':[('a', 8), ('d', 4)],
-    'c':[('a',6), ('d', 3)],
-    'd':[('a',5), ('b',4), ('c',3)]
-    }
-
-    adj_list2 = {
-    'a':[('b',8), ('f',1), ('h', 6), ('e',5)],
-    'b':[('a',8), ('c',4), ('f',2)],
-    'c':[('b',4), ('f',2), ('g',7)],
-    'g':[('c',7), ('f',9)],
-    'f':[('g',9), ('c',2), ('b', 6), ('a',1), ('h',5)],
-    'h':[('f',5), ('a',6), ('e',3)],
-    'e':[('a',5), ('h',3)]
-    }
-
-    graph = {
-    0: [1, 2, 3],
-    1: [0, 5],
-    2: [0, 3],
-    3: [0, 2, 4],
-    4: [3],
-    5: [1]
-    }
-
-    """
-    2 --- 0 --- 1 --- 5
-    \   |
-    \  |
-        3 --- 4
-    """
-    print(prims(adj_list, (0,'a')))
-
-    # import random
-    # price = [random.randint(0,50) for x in range(10)]
-    # size = len(price)   
-    # item_weights = [0, 2, 10, 3, 6, 18]
-    # item_values = [0, 1, 20, 3, 14, 100]
-    # print(knapsack(item_weights, item_values, 15))
-    # print(knappysack(item_weights, item_values, 15))
-    # print(rod(price, size, {}))
-    # print(get_edges(graph))
-    # print(bounce([0,0,1,0,0,0,0,0,0,0,0], 5, 0))
-
-
+print(rod_cut(price,size,{}))
