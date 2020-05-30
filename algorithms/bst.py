@@ -54,5 +54,5 @@ def bst_sort(arr):
     return root
 
 tree = bst_sort(arr)
-tree.print_tree()
-#tree.pre_order()
+#tree.print_tree()
+tree.pre_order()

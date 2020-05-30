@@ -172,3 +172,70 @@ price = [random.randint(0,50) for x in range(10)]
 size = len(price)
 
 print(rod_cut(price,size,{}))
+
+
+def recursion_rod(price, size, memo):
+    if size in memo:
+        return memo[size]
+    if size <= 0:
+        return 0
+    max_cut = 0
+    for cut in range(size):
+        max_cut = max(max_cut, price[cut] + recursion_rod(price, size-cut-1, memo))
+    memo[size] = max_cut
+    return max_cut
+
+def maxCut(price,size):
+    dp = [0 for _ in range(size+1)]
+    price = [0] + price 
+    
+    for cut in range(1, size+1):
+        max_cut = 0
+        for cost in range(1, len(price)):
+            if cost <= cut:
+                max_cut = max(max_cut, price[cost] + dp[cut-cost])
+        dp[cut] = max_cut
+    return dp
+        
+
+print(maxCut(price,size))
+print(recursion_rod(price,size,{}))
+
+days = [1,4,6,7,8,20]
+costs = [2,7,15]
+ans = 11
+
+
+def minTicket(days, costs):
+    n = days[-1]
+    dp = [float('inf') for _ in range(n+1)]
+    # no ticket/no days
+    dp[0] = 0
+
+    for day in range(1, n+1):
+        dp[day] = dp[day-1]
+        if day in days:
+            dp[day] = min(
+                dp[day-1] + costs[0],
+                dp[max(0,day-7)] + costs[1],
+                dp[max(0, day-30)] + costs[2]
+            )
+    return dp
+print(minTicket(days, costs))
+
+def combosum(arr, target):
+    arr.sort()
+    ans = []
+    def findCombo(target,current,idx):
+        if target == 0:
+            ans.append(current)
+        if target < 0:
+            return 
+        
+        for x in range(idx, len(arr)):
+            if x==idx or arr[x] != arr[x-1]:
+                findCombo(target-arr[x], current + [arr[x]], x+1)
+        
+    findCombo(target,[],0)
+    return ans
+print(combosum([3,5,6,21,6,8,3,2,7], 8))

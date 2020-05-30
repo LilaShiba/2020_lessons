@@ -101,4 +101,18 @@ def changeys(coins, target):
     return dp
 
 print(changeys(coins, target))
+print(bfs_least_coins(coins, target))
 
+def mm(coins,target):
+    dp = [target+1 for _ in range(target+1)]
+    dp[0] = 0
+
+    for sp in range(1,target+1):
+        for coin in coins:
+            if coin <= sp:
+                dp[sp] = min(dp[sp], 1+dp[sp-coin])
+            else:
+                break
+    return dp
+
+print(mm(coins,target))

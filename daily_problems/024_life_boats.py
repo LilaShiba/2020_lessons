@@ -16,22 +16,17 @@ people = [100, 200, 150, 80]
 limit = 200
 ans = 3
 
-def boats_needed(arr):
-    arr = sorted(arr, key=lambda x:x, reverse=True)
-    lo = len(arr)-1
-    boat = 0
-    n = len(arr)-1
+def boats_needed(arr, limit):
+    arr.sort()
+    lo = 0
+    boats = 0
+    hi = len(arr)-1
     
-    while hi < len(arr)-1:
-        
-        if arr[hi] + arr[lo] <= 200:
-            arr.pop(lo)
-        
-        boat += 1
-        hi += 1 
-        lo = len(arr)-1
-        
-
-    return boat
-print(boats_needed(people))
+    while lo <= hi:
+        if arr[lo] + arr[hi] <= limit:
+            lo+=1
+        hi-=1
+        boats+=1
+    return boats
+print(boats_needed(people, limit))
     

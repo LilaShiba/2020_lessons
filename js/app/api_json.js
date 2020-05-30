@@ -11,7 +11,7 @@ const tiles = L.tileLayer(tileUrl, { attribution });
 tiles.addTo(mymap);
 // custom icon
 const myIcon = L.icon({
-    iconUrl: 'shiber.jpeg',
+    iconUrl: 'heyshibe.jpg',
     iconSize: [50, 32],
     iconAnchor: [25, 16]
 });

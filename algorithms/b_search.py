@@ -17,7 +17,7 @@ def b_search_i(arr, target):
             return mid, arr[mid]
     
     return False
-    
+
 print(b_search_i(arr, 10))
 
 def b_search_r(arr, target, l, r):
