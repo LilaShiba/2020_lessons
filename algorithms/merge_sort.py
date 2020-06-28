@@ -1,6 +1,6 @@
 import random
 arr = [random.randint(0, 100) for x in range(25)]
-
+arr = [-1,2,-8,-10]
 def msort(arr):
     n = len(arr)
     if n > 1:

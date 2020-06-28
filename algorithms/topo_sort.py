@@ -3,7 +3,7 @@ def dfs(node, adj_list, cache,stack):
     for edge in adj_list[node]:
         if edge not in cache:
             dfs(edge,adj_list,cache,stack)
-    stack.append(node)
+    stack.insert(0,node)
 
 
 
@@ -16,8 +16,34 @@ def topo_sort(adj_list,cache):
 
 
 graph = {0: [1, 2, 3], 1: [3], 2: [4], 3: [4, 0], 4: [0]}
-
+graph2 = {
+        1: [2, 3],
+        2: [4, 5, 6],
+        3: [4,6],
+        4: [5,6],
+        5: [6],
+        6: []
+    }
 # [ 0, 1, 3, 4, 2 ]
 
+def dfs_topo(graph):
+    visited = set()
+    stack = []
 
-print(topo_sort(graph, []))
+    for v in graph:
+        if v not in visited:
+            dfs_sort(v, visited, stack, graph)
+    return stack 
+
+def dfs_sort(v,visited,stack,graph):
+    visited.add(v)
+    for edge in graph[v]:
+        if edge not in visited:
+            dfs_sort(edge,visited,stack,graph)
+    stack.insert(0,v)
+
+
+
+
+print(topo_sort(graph2, []))
+print(dfs_topo(graph2))

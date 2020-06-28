@@ -6,6 +6,16 @@ class Node:
         self.lvl = None
         self.parent = None
 
+    def inverse(self):
+        queue = [self]
+
+        while queue:
+            node = queue.pop()
+            if node:
+                node.r, node.l = node.l, node.r 
+                queue.append(node.l)
+                queue.append(node.r)
+        return root
 
     def get_lvl(self) -> object:
         self.lvl = 0

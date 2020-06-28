@@ -37,9 +37,9 @@ def dp_coins(coins, target):
             table[amount] += table[amount-coins[coin]]
     return table
 
-c = [1,3,5]
+c = [1,2,5]
 ways = len(c)
-print(coins_change(c, len(c), 11))
+print(coins_change(c, len(c), 5))
 # print(dp_coins(c, 5))
 
 

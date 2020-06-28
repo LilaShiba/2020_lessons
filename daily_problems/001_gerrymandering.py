@@ -88,17 +88,18 @@ def bfs(matrix, x_list, visited=[]):
         
             
         
-matrix = example_tests[1]
-pprint.pprint(matrix)
+# matrix = example_tests[1]
+# pprint.pprint(matrix)
 
-adj_list = make_adj_list(matrix,'X')
-adj_listO = make_adj_list(matrix,'O')
+# adj_list = make_adj_list(matrix,'X')
+# adj_listO = make_adj_list(matrix,'O')
 
-connections = topo_sort(adj_list)
-connectionsO = topo_sort(adj_listO)
+# connections = topo_sort(adj_list)
+# connectionsO = topo_sort(adj_listO)
 
-print(connections)
-print('o',connectionsO)
+# print(connections)
+# print('o',connectionsO)
 
 
-    
+def can_win(matrix):
+	

@@ -32,24 +32,56 @@ print(in_trie(t,'mellos'))
 insert(t, 'hellos')
 print(t)
 
-class trieNode:
-    def __init__(self,v):
-        self.v = v
-        self.children = None
-        self.end = False
-
 
 class Trie:
+
     def __init__(self):
-        self.children = []
-    
-    def insert_word(self, word):
-        for letter in word:
-            if letter in self.children:
-                self = self.find(letter)
-            else:
-                self.children.add_letter(letter)
-    
-    
-    def find(self, letter):
-        pass
+        """
+        Initialize your data structure here.
+        """
+        self.root = {}
+
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+        """
+        start = self.root
+        
+        for i in word:
+            if i not in start:
+                start[i] = {}
+            start = start[i]
+        start['$'] = True
+        
+
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the trie.
+        """
+        start = self.root
+        for i in word:
+            if i not in start:
+                return False
+            start = start[i]
+        return '$' in start
+        
+
+    def startsWith(self, prefix: str) -> bool:
+        """
+        Returns if there is any word in the trie that starts with the given prefix.
+        """
+        start = self.root
+        
+        for i in prefix:
+            if i not in start:
+                return False
+            start = start[i]
+        return True
+        
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)

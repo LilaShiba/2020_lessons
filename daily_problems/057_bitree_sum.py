@@ -19,6 +19,25 @@ class Node:
         self.v = value 
         self.r = None 
         self.l = None 
+    def inverse(self):
+        root = self
+        queue = [root]
+
+        while queue:
+            node = queue.pop()
+            if node:
+                node.r, node.l = node.l, node.r 
+                queue.append(node.l)
+                queue.append(node.r)
+        return root
+
+    def inorder(self):
+        root = self 
+        if root.l:
+            root.l.inorder()
+        print(root.v)
+        if root.r:
+            root.r.inorder()
     
     def add(self, value):
         if value > self.v:
@@ -62,5 +81,7 @@ if __name__ == "__main__":
     root = Node(5)
     for x in arr:
         root.add(x)
-    #root.print_level()
+    root.inorder()
     root.search_sum([4,9])
+    iroot = root.inverse()
+    iroot.inorder()
